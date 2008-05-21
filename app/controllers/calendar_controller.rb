@@ -3,12 +3,18 @@ class CalendarController < ApplicationController
 
   def matches
     @fixtures = Fixtures.new
-    rows = get_table_rows(params[:id])
-    @fixtures.from_table_rows(rows)
+    @id = params[:id]
 
-    respond_to do |format|
-      format.html
-      format.ics {render :text => @fixtures.to_ical}
+    if @id.to_i > 0
+      rows = get_table_rows(params[:id])
+      @fixtures.from_table_rows(rows)
+
+      respond_to do |format|
+        format.html
+        format.ics {render :text => @fixtures.to_ical}
+      end
+    else
+      raise "Illegal ID"
     end
   end
 
