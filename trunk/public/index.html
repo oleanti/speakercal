@@ -62,7 +62,7 @@
 
 
       #header {
-        background-image: url("images/rails.png");
+        background-image: url("images/logo.png");
         background-repeat: no-repeat;
         background-position: top left;
         height: 64px;
@@ -193,6 +193,27 @@
             'BlindUp' : 'BlindDown']('about-content', {duration: 0.25});
         }
       }
+
+			function updateURLs() {
+				if ($('id-number').value) {
+					var url = 'http://speakercal.trylle.no/calendar/matches/' + 
+						$('id-number').value
+
+					$('icallink').update(url + '.ics');
+					$('icallink').writeAttribute('href', url + '.ics');
+					$('previewlink').writeAttribute('href', url);
+
+					if (Element.visible('urls')) {
+						new Effect['Highlight']('urls');
+					} else {
+						new Effect['BlindDown']('urls', {duration: 0.25});
+					}
+					$('emptyurl').hide();
+				} else {
+					new Effect['BlindUp']('urls', {duration: 0.25});
+					$('emptyurl').show();
+				}
+			}
       
       window.onload = function() {
         $('search-text').value = '';
@@ -202,71 +223,106 @@
       }
     </script>
   </head>
-  <body>
+  <body onLoad="$('id-number').value=''">
     <div id="page">
       <div id="sidebar">
         <ul id="sidebar-items">
           <li>
-            <form id="search" action="http://www.google.com/search" method="get">
-              <input type="hidden" name="hl" value="en" />
-              <input type="text" id="search-text" name="q" value="site:rubyonrails.org " />
-              <input type="submit" value="Search" /> the Rails site
-            </form>
-          </li>
-        
-          <li>
-            <h3>Join the community</h3>
+            <h3>Om speakercal</h3>
+						<p>Speakercal er utviklet av Sigve Indregard for
+						<a href="http://trylle.no">trylle.no</a>. Speakercal kan
+						brukes fritt av alle som måtte ønske det, men vi kan selvsagt
+						ikke gi noen garanti for funksjonaliteten. I den grad du gjør
+						deg avhengig av denne programvaren, må du bære risikoen selv.
+						</p>
+
+						<p>Speakercal er også lisensiert under GPL3, og du står fritt
+						til å laste ned, modifisere og redistribuere programvaren
+						(på din egen server ;-), så lenge du også offentliggjør
+						kildekoden når du redistribuerer.</p>
+
             <ul class="links">
-              <li><a href="http://www.rubyonrails.org/">Ruby on Rails</a></li>
-              <li><a href="http://weblog.rubyonrails.org/">Official weblog</a></li>
-              <li><a href="http://lists.rubyonrails.org/">Mailing lists</a></li>
-              <li><a href="http://wiki.rubyonrails.org/rails/pages/IRC">IRC channel</a></li>
-              <li><a href="http://wiki.rubyonrails.org/">Wiki</a></li>
-              <li><a href="http://dev.rubyonrails.org/">Bug tracker</a></li>
+              <li><a href="http://www.trylle.no/">trylle.no</a></li>
+              <li><a href="http://www.indregard.no/">indregard.no (blogg)</a></li>
+              <li><a href="http://speakercal.googlecode.com">Kildekode og 
+							<em>issue tracking</em></a></li>
             </ul>
           </li>
-          
-          <li>
-            <h3>Browse the documentation</h3>
-            <ul class="links">
-              <li><a href="http://api.rubyonrails.org/">Rails API</a></li>
-              <li><a href="http://stdlib.rubyonrails.org/">Ruby standard library</a></li>
-              <li><a href="http://corelib.rubyonrails.org/">Ruby core</a></li>
-            </ul>
-          </li>
+
+					<li>
+						<h3>Teknologier</h3>
+						<p>Speakercal baserer seg på:</p>
+						<ul class="links">
+							<li><a href="http://rubyonrails.org">Ruby on Rails</a></li>
+							<li><a href="http://code.whytheluckystiff.net/hpricot">Hpricot</a></li>
+							<li><a href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar (RFC2445)</a></li>
+						</ul>
         </ul>
       </div>
 
       <div id="content">
         <div id="header">
-          <h1>Welcome aboard</h1>
-          <h2>You&rsquo;re riding Ruby on Rails!</h2>
+          <h1>Speakercal</h1>
         </div>
+				<div id="about">
+					<p>Speakercal lar deg omforme en terminliste på
+					<a href="http://speaker.no">speaker.no</a> til en
+					dynamisk oppdatert iCal-fil, som kan importeres i Microsoft Outlook
+					eller abonneres på (med oppdaterte resultater!) i Apples iCalendar,
+					Novells Evolution, Google Calendar eller lignende 
+					programmer og tjenester.</p>
 
-        <div id="about">
-          <h3><a href="rails/info/properties" onclick="about(); return false">About your application&rsquo;s environment</a></h3>
-          <div id="about-content" style="display: none"></div>
-        </div>
-        
         <div id="getting-started">
-          <h1>Getting started</h1>
-          <h2>Here&rsquo;s how to get rolling:</h2>
+          <h1>Slik gjør du</h1>
           
           <ol>
             <li>
-              <h2>Create your databases and edit <tt>config/database.yml</tt></h2>
-              <p>Rails needs to know your login and password.</p>
+              <h2>Finn ID-nummeret for ditt lag</h2>
+              <p>For å kunne laste ned terminlista, må Speakercal få vite
+							ID-nummeret til ditt lag. ID-nummeret finner du ved å søke opp
+							ditt lag på <a href="http://speaker.no">speaker.no</a>, klikke
+							deg inn på lagets oversiktsside 
+							og se i adresselinjen. Der står det (blant annet) 
+							<tt>id=xxxxxx</tt>. Tallet <tt>x</tt> er ditt lags id-nummer.</p>
+							<p>
+							<img src="images/addressbar.png" alt="Et eksempel på en 
+							adresselinje" style="margin-left: -2cm"/>
             </li>
           
             <li>
-              <h2>Use <tt>script/generate</tt> to create your models and controllers</h2>
-              <p>To see all available options, run it without parameters.</p>
+              <h2>Skriv inn ID-nummeret her</h2>
+              <p>Skriv inn nummeret i boksen under:
+							<form method="get" action="/calendar/matches">
+								<input id="id-number" name="id" value="" size="7" 
+									onChange="updateURLs();"/>
+							</form>
+							</p>
             </li>
-            
-            <li>
-              <h2>Set up a default route and remove or rename this file</h2>
-              <p>Routes are set up in config/routes.rb.</p>
-            </li>
+
+						<li><h2>Kopier og lim inn adressen:</h2>
+						<div id="urls" style="display:none">
+						<p>
+						Adressen til iCal-filen er:<br/>
+						<a href="http://speakercal.trylle.no/" id="icallink"
+						>http://speakercal.trylle.no</a>
+						
+						<p>Du kan forhåndsvise
+						innholdet <a href="http://speakercal.trylle.no" id="previewlink"
+						>her</a>.</p>
+						</div>
+						<div id="emptyurl">
+						<p>Adressen kommer her når du har tastet inn ID-nummeret.</p>
+						</div>
+
+						<li><h2>Virker det ikke?</h2>
+						<p>Du må ha Javascript skrudd på i nettleseren din for
+						få opp adressen automatisk. Ellers kan du prøve å bare skrive
+						inn adressen 
+						<tt>http://speakercal.trylle.no/calendar/matches/[id].ics</tt>
+						direkte, der [id] byttes ut med id-nummeret du har funnet.</p>
+
+						<p>Kalenderfilene oppdateres <em>en gang i døgnet</em>, for å
+						spare både speaker.no og meg for litt båndbredde.</p>
           </ol>
         </div>
       </div>
