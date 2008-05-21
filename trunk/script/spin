@@ -1,9 +1,1 @@
-#!/bin/sh
-### Script for starting your Rails applications
-
-# Replace USERNAME with your TextDrive user name
-USER=sigvei
-
-# This is for your main domain. Replace APPNAME with the appropriate value
-RAILS_ENV=production /usr/local/bin/spawn-fcgi -f /users/home/$USER/railsapps/speakercal/current/public/dispatch.fcgi -s /users/home/$USER/var/run/speakercal.socket
-
+/users/home/sigvei/railsapps/speakercal/current/process/spawner -p 8166 -i 1
