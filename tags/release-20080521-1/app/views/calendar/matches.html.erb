@@ -1,0 +1,17 @@
+<% url = url_for(:id => "#{@id}.ics", :only_path => false) %>
+<h1>Kamper</h1>
+<p>Under vises kampene for laget du har valgt (<%=@id%>). 
+Adressen til iCal-abonnement
+er <%=link_to url, { :id => "#{@id}.ics", :only_path => false }%>. </p>
+
+<%=link_to 'Tilbake til speakercals forside', :back%>
+
+<p>
+<% unless @fixtures.to_s.size > 0 %>
+  <em>Ingen kamper for denne IDen.</em>
+<% end %>
+</p>
+
+<% @fixtures.to_s.each do |fix| %>
+  <%=fix%>
+<% end %>

@@ -1,0 +1,342 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <title>Speakercal</title>
+    <style type="text/css" media="screen">
+      body {
+        margin: 0;
+        margin-bottom: 25px;
+        padding: 0;
+        background-color: #f0f0f0;
+        font-family: "Lucida Grande", "Bitstream Vera Sans", "Verdana";
+        font-size: 13px;
+        color: #333;
+      }
+      
+      h1 {
+        font-size: 28px;
+        color: #000;
+      }
+      
+      a  {color: #03c}
+      a:hover {
+        background-color: #03c;
+        color: white;
+        text-decoration: none;
+      }
+      
+      
+      #page {
+        background-color: #f0f0f0;
+        width: 750px;
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      
+      #content {
+        float: left;
+        background-color: white;
+        border: 3px solid #aaa;
+        border-top: none;
+        padding: 25px;
+        width: 500px;
+      }
+      
+      #sidebar {
+        float: right;
+        width: 175px;
+      }
+
+      #footer {
+        clear: both;
+      }
+      
+
+      #header, #about, #getting-started {
+        padding-left: 75px;
+        padding-right: 30px;
+      }
+
+
+      #header {
+        background-image: url("images/logo.png");
+        background-repeat: no-repeat;
+        background-position: top left;
+        height: 64px;
+      }
+      #header h1, #header h2 {margin: 0}
+      #header h2 {
+        color: #888;
+        font-weight: normal;
+        font-size: 16px;
+      }
+      
+      
+      #about h3 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+      
+      #about-content {
+        background-color: #ffd;
+        border: 1px solid #fc0;
+        margin-left: -11px;
+      }
+      #about-content table {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 11px;
+        border-collapse: collapse;
+      }
+      #about-content td {
+        padding: 10px;
+        padding-top: 3px;
+        padding-bottom: 3px;
+      }
+      #about-content td.name  {color: #555}
+      #about-content td.value {color: #000}
+      
+      #about-content.failure {
+        background-color: #fcc;
+        border: 1px solid #f00;
+      }
+      #about-content.failure p {
+        margin: 0;
+        padding: 10px;
+      }
+      
+      
+      #getting-started {
+        border-top: 1px solid #ccc;
+        margin-top: 25px;
+        padding-top: 15px;
+      }
+      #getting-started h1 {
+        margin: 0;
+        font-size: 20px;
+      }
+      #getting-started h2 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: normal;
+        color: #333;
+        margin-bottom: 25px;
+      }
+      #getting-started ol {
+        margin-left: 0;
+        padding-left: 0;
+      }
+      #getting-started li {
+        font-size: 18px;
+        color: #888;
+        margin-bottom: 25px;
+      }
+      #getting-started li h2 {
+        margin: 0;
+        font-weight: normal;
+        font-size: 18px;
+        color: #333;
+      }
+      #getting-started li p {
+        color: #555;
+        font-size: 13px;
+      }
+      
+      
+      #search {
+        margin: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        font-size: 11px;
+      }
+      #search input {
+        font-size: 11px;
+        margin: 2px;
+      }
+      #search-text {width: 170px}
+      
+      
+      #sidebar ul {
+        margin-left: 0;
+        padding-left: 0;
+      }
+      #sidebar ul h3 {
+        margin-top: 25px;
+        font-size: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      #sidebar li {
+        list-style-type: none;
+      }
+      #sidebar ul.links li {
+        margin-bottom: 5px;
+      }
+      
+    </style>
+    <script type="text/javascript" src="javascripts/prototype.js"></script>
+    <script type="text/javascript" src="javascripts/effects.js"></script>
+    <script type="text/javascript">
+      function about() {
+        if (Element.empty('about-content')) {
+          new Ajax.Updater('about-content', 'rails/info/properties', {
+            method:     'get',
+            onFailure:  function() {Element.classNames('about-content').add('failure')},
+            onComplete: function() {new Effect.BlindDown('about-content', {duration: 0.25})}
+          });
+        } else {
+          new Effect[Element.visible('about-content') ? 
+            'BlindUp' : 'BlindDown']('about-content', {duration: 0.25});
+        }
+      }
+
+			function updateURLs() {
+				if ($('id-number').value) {
+					var url = 'http://speakercal.trylle.no/calendar/matches/' + 
+						$('id-number').value
+
+					$('icallink').update(url + '.ics');
+					$('icallink').writeAttribute('href', url + '.ics');
+					$('previewlink').writeAttribute('href', url);
+
+					if (Element.visible('urls')) {
+						new Effect['Highlight']('urls');
+					} else {
+						new Effect['BlindDown']('urls', {duration: 0.25});
+					}
+					$('emptyurl').hide();
+				} else {
+					new Effect['BlindUp']('urls', {duration: 0.25});
+					$('emptyurl').show();
+				}
+			}
+      
+      window.onload = function() {
+        $('search-text').value = '';
+        $('search').onsubmit = function() {
+          $('search-text').value = 'site:rubyonrails.org ' + $F('search-text');
+        }
+      }
+    </script>
+		<script type="text/javascript">
+		var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+		document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+		</script>
+		<script type="text/javascript">
+		var pageTracker = _gat._getTracker("UA-833821-5");
+		pageTracker._initData();
+		pageTracker._trackPageview();
+		</script>
+  </head>
+  <body onLoad="$('id-number').value=''">
+    <div id="page">
+      <div id="sidebar">
+        <ul id="sidebar-items">
+          <li>
+            <h3>Om speakercal</h3>
+						<p>Speakercal er utviklet av Sigve Indregard for
+						<a href="http://trylle.no">trylle.no</a>. Speakercal kan
+						brukes fritt av alle som måtte ønske det, men vi kan selvsagt
+						ikke gi noen garanti for funksjonaliteten. I den grad du gjør
+						deg avhengig av denne programvaren, må du bære risikoen selv.
+						</p>
+
+						<p>Speakercal er også lisensiert under GPL3, og du står fritt
+						til å laste ned, modifisere og redistribuere programvaren
+						(på din egen server ;-), så lenge du også offentliggjør
+						kildekoden når du redistribuerer.</p>
+
+            <ul class="links">
+              <li><a href="http://www.trylle.no/">trylle.no</a></li>
+              <li><a href="http://www.indregard.no/">indregard.no (blogg)</a></li>
+              <li><a href="http://speakercal.googlecode.com">Kildekode og 
+							<em>issue tracking</em></a></li>
+            </ul>
+          </li>
+
+					<li>
+						<h3>Teknologier</h3>
+						<p>Speakercal baserer seg på:</p>
+						<ul class="links">
+							<li><a href="http://rubyonrails.org">Ruby on Rails</a></li>
+							<li><a href="http://code.whytheluckystiff.net/hpricot">Hpricot</a></li>
+							<li><a href="http://www.ietf.org/rfc/rfc2445.txt">iCalendar (RFC2445)</a></li>
+						</ul>
+        </ul>
+      </div>
+
+      <div id="content">
+        <div id="header">
+          <h1>Speakercal</h1>
+        </div>
+				<div id="about">
+					<p>Speakercal lar deg omforme en terminliste på
+					<a href="http://speaker.no">speaker.no</a> til en
+					dynamisk oppdatert iCal-fil, som kan importeres i Microsoft Outlook
+					eller abonneres på (med oppdaterte resultater!) i Apples iCalendar,
+					Novells Evolution, Google Calendar eller lignende 
+					programmer og tjenester.</p>
+
+        <div id="getting-started">
+          <h1>Slik gjør du</h1>
+          
+          <ol>
+            <li>
+              <h2>Finn ID-nummeret for ditt lag</h2>
+              <p>For å kunne laste ned terminlista, må Speakercal få vite
+							ID-nummeret til ditt lag. ID-nummeret finner du ved å søke opp
+							ditt lag på <a href="http://speaker.no">speaker.no</a>, klikke
+							deg inn på lagets oversiktsside 
+							og se i adresselinjen. Der står det (blant annet) 
+							<tt>id=xxxxxx</tt>. Tallet <tt>x</tt> er ditt lags id-nummer.</p>
+							<p>
+							<img src="images/addressbar.png" alt="Et eksempel på en 
+							adresselinje" style="margin-left: -2cm"/>
+            </li>
+          
+            <li>
+              <h2>Skriv inn ID-nummeret her</h2>
+              <p>Skriv inn nummeret i boksen under:
+							<form method="get" action="/calendar/matches">
+								<input id="id-number" name="id" value="" size="7" 
+									onChange="updateURLs();"/>
+							</form>
+							</p>
+            </li>
+
+						<li><h2>Kopier og lim inn adressen:</h2>
+						<div id="urls" style="display:none">
+						<p>
+						Adressen til iCal-filen er:<br/>
+						<a href="http://speakercal.trylle.no/" id="icallink"
+						>http://speakercal.trylle.no</a>
+						
+						<p>Du kan forhåndsvise
+						innholdet <a href="http://speakercal.trylle.no" id="previewlink"
+						>her</a>.</p>
+						</div>
+						<div id="emptyurl">
+						<p>Adressen kommer her når du har tastet inn ID-nummeret.</p>
+						</div>
+
+						<li><h2>Virker det ikke?</h2>
+						<p>Du må ha Javascript skrudd på i nettleseren din for
+						få opp adressen automatisk. Ellers kan du prøve å bare skrive
+						inn adressen 
+						<tt>http://speakercal.trylle.no/calendar/matches/[id].ics</tt>
+						direkte, der [id] byttes ut med id-nummeret du har funnet.</p>
+
+						<p>Kalenderfilene oppdateres <em>en gang i døgnet</em>, for å
+						spare både speaker.no og meg for litt båndbredde.</p>
+          </ol>
+        </div>
+      </div>
+      
+      <div id="footer">&nbsp;</div>
+    </div>
+  </body>
+</html>
