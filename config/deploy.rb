@@ -2,7 +2,8 @@ set :application, "speakercal"
 set :deploy_to, "/home/sigvei/public_html/railsapps/#{application}"
 set :repository,  "http://speakercal.googlecode.com/svn/trunk"
 
-set :use_sudo, true
+default_run_options[:pty] = true
+set :use_sudo, false
 
 set :user, 'sigvei'
 set :domain, "speakercal.trylle.no"
