@@ -19,6 +19,11 @@ class CalendarControllerTest < ActionController::TestCase
     end
   end
 
+  def test_long_id
+    run_id_test(1234567891234567)
+    run_id_test("1"*16)
+  end
+
   private
 
   def run_id_test(string)

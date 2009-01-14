@@ -20,7 +20,7 @@ class CalendarController < ApplicationController
     require 'hpricot'
     require 'open-uri'
 
-    if (/^\d+$/.match(team_id.to_s))
+    if (/^\d+$/.match(team_id.to_s) and team_id.to_s.length < 15)
       doc = Hpricot(open("http://idrett.speaker.no/07/organisation.aspx?WCI=wiTeamResults&WCU=#{team_id}&HideKO=y"))
       doc/"table.tblFixtures"/"tr.even"
     else
