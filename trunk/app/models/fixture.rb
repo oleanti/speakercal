@@ -1,8 +1,8 @@
 require 'hpricot'
 require 'icalendar'
-class Fixtures
+class Fixture
   def initialize
-    @fixtures = []
+    @fixtures = [ ]
   end
 
   def from_table_rows(trs)
