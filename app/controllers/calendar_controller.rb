@@ -20,11 +20,14 @@ class CalendarController < ApplicationController
     require 'hpricot'
     require 'open-uri'
 
-    if (/^\d+$/.match(team_id.to_s) and team_id.to_s.length < 15)
+    raise RuntimeError, "Illegal ID" unless /^\d+$/.match(team_id.to_s) and team_id.to_s.length < 8
+    if team_id.to_i > 10000
       doc = Hpricot(open("http://idrett.speaker.no/07/organisation.aspx?WCI=wiTeamResults&WCU=#{team_id}&HideKO=y"))
       doc/"table.tblFixtures"/"tr.even"
     else
-      raise RuntimeError, "Illegal ID"
+      logger.info "Using new URL"
+      doc = Hpricot(open("http://fotball.speaker.no/FiksFotballdataClient/ft.aspx?scr=teamresult&flid=#{team_id}"))
+      (doc/"table.clCommonGrid tbody > tr").delete_if{|node| node.children.length != 9}
     end
   end
 end
