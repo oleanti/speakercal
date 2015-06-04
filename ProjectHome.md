@@ -1,0 +1,3 @@
+Speaker.no provides fixture lists and results for all major sports in Norway.
+
+This Rails application provides on-the-fly transformation of these lists into iCal files, which can be imported into your favourite calendar application. Modern calendar applications do also support subscriptions to such calendars. Please note: This is a server application, which can serve any number of users. If you just want an iCal, you can find the converter at speakercal.trylle.no.
